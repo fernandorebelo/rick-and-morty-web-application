@@ -12,6 +12,9 @@ def home():
 
 @app.route('/character', methods=['GET', 'POST'])
 def character():
+    if 'back' in request.form:
+        return render_template('home.html')
+
     if request.method == 'POST':
         name = request.form['name']
         return render_template('character.html', name=name)
