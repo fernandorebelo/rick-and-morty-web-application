@@ -12,8 +12,12 @@ def home():
 
 @app.route('/character', methods=['GET', 'POST'])
 def character():
-    name = request.form['name']
-    return render_template('character.html', name=name)
+    if request.method == 'POST':
+        name = request.form['name']
+        return render_template('character.html', name=name)
+    else:
+        name = request.args.get('name')
+        return render_template('character.html', name=name)
 
 
 if __name__ == '__main__':
