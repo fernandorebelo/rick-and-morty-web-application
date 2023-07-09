@@ -10,7 +10,11 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/character/')
-@app.route('/character/<name>')
-def character(name=''):
+@app.route('/character', methods=['GET', 'POST'])
+def character():
+    name = request.form['name']
     return render_template('character.html', name=name)
+
+
+if __name__ == '__main__':
+    app.run()
