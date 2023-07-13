@@ -4,52 +4,46 @@ import psycopg2
 
 app = Flask(__name__)
 
-# Database connection configuration
-db_config = {
-    'host': 'localhost',
-    'database': 'RickAndMorty',
-    'user': 'postgres',
-    'password': 'root'
-}
-
-# Function to retrieve characters from the database based on search text and pagination
-
 
 def get_characters(search_text, offset, limit):
-    conn = psycopg2.connect(**db_config)
-    cur = conn.cursor()
+    try:
+        connection = psycopg2.connect(
+            host='localhost',
+            database='RickAndMorty',
+            user='postgres',
+            password='root'
+        )
+    except (Exception, psycopg2.Error) as error:
+        print("Erro ao conectar ao PostgreSQL:", error)
+    cur = connection.cursor()
 
-    # Perform the search query
+    # Query search on postgres database
     cur.execute("SELECT * FROM character WHERE name ILIKE %s LIMIT %s OFFSET %s",
                 ('%' + search_text + '%', limit, offset))
 
     characters = cur.fetchall()
 
     cur.close()
-    conn.close()
+    connection.close()
 
     return characters
-
-# Route to the index page
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Route to the character page
-
 
 @app.route('/character', methods=['GET', 'POST'])
 def character():
     if request.method == 'POST':
         search_text = request.form['search']
-        offset = 0  # Initial offset for pagination
+        offset = 0
     else:
         search_text = request.args.get('search')
         offset = int(request.args.get('offset', 0))
 
-    limit = 20  # Number of characters to retrieve
+    limit = 20
 
     characters = get_characters(search_text, offset, limit)
 
