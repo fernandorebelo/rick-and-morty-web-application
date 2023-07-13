@@ -43,10 +43,10 @@ def index():
 @app.route('/character', methods=['GET', 'POST'])
 def character():
     if request.method == 'POST':
-        search_text = request.form['search_text']
+        search_text = request.form['search']
         offset = 0  # Initial offset for pagination
     else:
-        search_text = request.args.get('search_text')
+        search_text = request.args.get('search')
         offset = int(request.args.get('offset', 0))
 
     limit = 20  # Number of characters to retrieve
@@ -56,7 +56,7 @@ def character():
     prev_offset = max(offset - limit, 0)
     next_offset = offset + limit
 
-    return render_template('character.html', characters=characters, prev_url=f'/character?search_text={search_text}&offset={prev_offset}', next_url=f'/character?search_text={search_text}&offset={next_offset}')
+    return render_template('character.html', characters=characters, prev_url=f'/character?search={search_text}&offset={prev_offset}', next_url=f'/character?search={search_text}&offset={next_offset}')
 
 
 if __name__ == '__main__':
