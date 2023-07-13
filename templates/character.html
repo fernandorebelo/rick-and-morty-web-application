@@ -3,12 +3,10 @@
   <title>Hello from Flask</title>
 </head>
 <body>
-  {% if name %}
-  <h1>The character's name is: {{name}}</h1>
-  {% else %}
-  <h1>No character was found!</h1>
-  {% endif %}
-  <form action="/">
-    <input type="submit" value="Back" name="back" />
-  </form>
+  <h1>List of Columns</h1>
+  <ul>
+    {% for row in rows %}
+    <li>{{ row }}</li>
+    {% endfor %}
+  </ul>
 </body>

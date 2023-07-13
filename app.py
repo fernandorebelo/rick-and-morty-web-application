@@ -1,8 +1,24 @@
-from flask import Flask, url_for, request
+from flask import Flask, request
 from flask import render_template
-from markupsafe import escape
+import psycopg2
 
 app = Flask(__name__)
+
+# Database connection information
+host = 'localhost'
+database = 'RickAndMorty'
+user = 'postgres'
+password = 'root'
+
+try:
+    connection = psycopg2.connect(
+        host=host,
+        database=database,
+        user=user,
+        password=password
+    )
+except (Exception, psycopg2.Error) as error:
+    print("Erro ao conectar ao PostgreSQL:", error)
 
 
 @app.route('/')
@@ -10,17 +26,16 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/character', methods=['GET', 'POST'])
+@app.route('/character', methods=['POST'])
 def character():
-    if 'back' in request.form:
-        return render_template('home.html')
+    cursor = connection.cursor()
+    name_submit = request.form.get('name')
+    query_name = "SELECT * FROM character WHERE name ILIKE %s OFFSET 0 LIMIT 20"
+    cursor.execute(query_name, ('%'+name_submit+'%',))
+    rows = cursor.fetchall()
+    cursor.close()
 
-    if request.method == 'POST':
-        name = request.form['name']
-        return render_template('character.html', name=name)
-    else:
-        name = request.args.get('name')
-        return render_template('character.html', name=name)
+    return render_template('character.html', rows=rows)
 
 
 if __name__ == '__main__':
