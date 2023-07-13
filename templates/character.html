@@ -1,12 +1,17 @@
+<!-- templates/character.html -->
 <!DOCTYPE html>
-<head>
-  <title>Rick and Morty API</title>
-</head>
-<body>
-  <h1>List of Columns</h1>
-  <ul>
-    {% for character in characters %}
-    <li>{{ character }}</li>
-    {% endfor %}
-  </ul>
-</body>
+<html>
+  <head>
+    <title>Character List</title>
+  </head>
+  <body>
+    <h1>Character List</h1>
+    <ul>
+      {% for character in characters %}
+      <li>{{ character }}</li>
+      {% endfor %}
+    </ul>
+    <a href="{{ prev_url }}">Previous</a>
+    <a href="{{ next_url }}">Next</a>
+  </body>
+</html>
